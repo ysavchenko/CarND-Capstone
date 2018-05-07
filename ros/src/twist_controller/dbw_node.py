@@ -77,6 +77,7 @@ class DBWNode(object):
                 # You should only publish the control commands if dbw is enabled
                 if self.dbw_enabled:
                     throttle, brake, steering = self.controller.control(self.target_linear_velocity, self.target_angular_velocity, self.current_linear_velocity)
+                    rospy.loginfo('Publish: ' + throttle + ', ' + brake + ', ' + steering)
                     self.publish(throttle, brake, steering)
                 else:
                     self.controller.reset()
@@ -88,10 +89,13 @@ class DBWNode(object):
 
     def twist_cmd_cb(self, msg):
         self.target_linear_velocity = msg.twist.linear.x
-        self.target_angular_velocity = msg.twist.angular.x
+        self.target_angular_velocity = msg.twist.angular.z
+        rospy.loginfo('Target linear velocity: ' + self.target_linear_velocity)
+        rospy.loginfo('Target angular velocity: ' + self.target_angular_velocity)
 
     def cur_vel_cb(self, msg):
         self.current_linear_velocity = msg.twist.linear.x
+        rospy.loginfo('Current linear velocity: ' + self.current_linear_velocity)
 
     def publish(self, throttle, brake, steer):
         tcmd = ThrottleCmd()
