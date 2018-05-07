@@ -84,7 +84,7 @@ class WaypointUpdater(object):
 
         lane.waypoints = self.waypoints.waypoints[idx:idx + LOOKAHEAD_WPS]
 
-        if self.stopline_wp_idx != -1 and self.stopline_wp_idx < idx + LOOKAHEAD_WPS:
+        if self.stopline_wp_idx is not None and self.stopline_wp_idx != -1 and self.stopline_wp_idx < idx + LOOKAHEAD_WPS:
             lane.waypoints = self.decelerate(lane.waypoints, idx)
 
         self.final_waypoints_pub.publish(lane)
