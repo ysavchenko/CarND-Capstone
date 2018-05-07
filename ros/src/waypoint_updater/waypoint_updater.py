@@ -25,6 +25,7 @@ TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
 LOOKAHEAD_WPS = 200 # Number of waypoints we will publish. You can change this number
+MAX_DECEL = .1
 
 
 class WaypointUpdater(object):
@@ -44,7 +45,7 @@ class WaypointUpdater(object):
         # Add other member variables you need below
         self.pose = None
         self.waypoints = None
-        self.traffic_wp_idx = None
+        self.stopline_wp_idx = None
         self.obstacle_wp_idx = None
         self.waypoint_pos = None
         self.waypoint_tree = None
@@ -80,8 +81,34 @@ class WaypointUpdater(object):
     def publish_waypoints(self, idx):
         lane = Lane()
         lane.header = self.waypoints.header
+
         lane.waypoints = self.waypoints.waypoints[idx:idx + LOOKAHEAD_WPS]
+
+        if self.stopline_wp_idx != -1 and self.stopline_wp_idx < idx + LOOKAHEAD_WPS:
+            lane.waypoints = self.decelerate(lane.waypoints, idx)
+
         self.final_waypoints_pub.publish(lane)
+
+    def decelerate(self, waypoints, idx):
+        new_waypoints = []
+
+        stop_at_i = max(self.stopline_wp_idx - idx - 2, 0)
+
+        for i, wp in enumerate(waypoints):
+            new_wp = Waypoint()
+            new_wp.pose = wp.pose
+
+            distance = self.distance(waypoints, i, stop_at_i)
+            velocity = math.sqrt(2 * MAX_DECEL * distance)
+            if velocity < 1:
+                velocity = 0
+
+            new_wp.twist.twist.linear.x = min(velocity, wp.twist.twist.linear.x)
+
+            new_waypoints.append(new_wp)
+
+        return new_waypoints
+
 
     def pose_cb(self, msg):
         self.pose = msg
@@ -93,7 +120,7 @@ class WaypointUpdater(object):
             self.waypoint_tree = KDTree(self.waypoint_pos)
 
     def traffic_cb(self, msg):
-        self.traffic_wp_idx = msg.data
+        self.stopline_wp_idx = msg.data
         pass
 
     def obstacle_cb(self, msg):
