@@ -12,3 +12,6 @@ class Controller(object):
         # TODO: Change the arg, kwarg list to suit your needs
         # Return throttle, brake, steer
         return 1., 0., 0.
+
+    def reset(self):
+        pass

@@ -49,6 +49,9 @@ class WaypointUpdater(object):
         self.waypoint_pos = None
         self.waypoint_tree = None
 
+        self.loop()
+
+    def loop(self):
         # Main execution loop
         rate = rospy.Rate(50)
         while not rospy.is_shutdown():
