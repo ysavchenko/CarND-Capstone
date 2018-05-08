@@ -157,7 +157,7 @@ class TLDetector(object):
             car_wp = self.get_closest_waypoint([self.pose.pose.position.x, self.pose.pose.position.y])
 
             # Find the closest visible traffic light (if one exists)
-            min_distance = MAX_DISTANCE
+            min_distance = len(self.waypoints.waypoints)
             for stop_line, light in zip(stop_line_positions, self.lights):
                 stop_line_wp = self.get_closest_waypoint(stop_line)
                 distance = stop_line_wp - car_wp
