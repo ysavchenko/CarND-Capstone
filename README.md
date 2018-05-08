@@ -21,7 +21,7 @@ Traffic Light Detector node looks through the list of pre-defined traffic lights
 
 #### Waypoint Updater
 
-The role of the Waypoint Updater is to filter the waypoints of the full vehicle path and report only the part of it to the Waypoint Follower. The goal is to find the next N waypoints (200 by default, but due to the bad performance on my test system I reduced it to 50) and then adjust them using additional stop waypoint information reported by Traffic Light Detector (if it is reported then instead of the posting original waypoint target speed we adjust it so the vehicle stops smoothly).
+The role of the Waypoint Updater is to filter the waypoints of the full vehicle path and report only the part of it to the Waypoint Follower. The goal is to find the next N waypoints (200 by default, but due to the bad performance on my test system I reduced it to 50) and then adjust them using additional stop waypoint information reported by the Traffic Light Detector (if it is reported then instead of posting original waypoint target speed we adjust it so the vehicle stops smoothly before the stop line).
 
 #### Twist Controller
 
@@ -31,6 +31,6 @@ Internally this controller uses the following pre-defined classes: Yaw Controlle
 
 ### Final Project
 
-As you can from the video below there were quite a lot of performance problem on my configuration. There were sudden drops in performance, controllers were not able to process waypoints in realtime and the vehicle was lost on the track as the result. Only after some optimization and reducing the number of waypoints to 50 the vehicle was able to finish the track, but you can still see some instances of performance drop (it is when there are some leftower waypoints drawn behind the car).
+As you can see from the video below there were quite a lot of performance problem on my configuration. There were sudden drops in performance, controllers were not able to process waypoints in realtime and the vehicle was lost on the track as the result. Only after some optimization and reducing the number of waypoints to 50 the vehicle was able to finish the track, but you can still see some instances of performance drop (it is when there are some leftower waypoints drawn behind the car).
 
 [![](https://img.youtube.com/vi/RLh2INBoFxE/0.jpg)](https://www.youtube.com/watch?v=RLh2INBoFxE)
