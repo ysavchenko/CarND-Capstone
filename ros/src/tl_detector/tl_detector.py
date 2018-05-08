@@ -13,6 +13,7 @@ import yaml
 from scipy.spatial import KDTree
 
 STATE_COUNT_THRESHOLD = 3
+MAX_DISTANCE = 100
 
 class TLDetector(object):
     def __init__(self):
@@ -115,7 +116,8 @@ class TLDetector(object):
             int: index of the closest waypoint in self.waypoints
 
         """
-        return self.waypoint_tree.query(pos, 1)[1]
+        result = self.waypoint_tree.query(pos, 1)
+        return result[1]
 
     def get_light_state(self, light):
         """Determines the current color of the traffic light
@@ -155,7 +157,7 @@ class TLDetector(object):
             car_wp = self.get_closest_waypoint([self.pose.pose.position.x, self.pose.pose.position.y])
 
             # Find the closest visible traffic light (if one exists)
-            min_distance = len(self.waypoints.waypoints)
+            min_distance = MAX_DISTANCE
             for stop_line, light in zip(stop_line_positions, self.lights):
                 stop_line_wp = self.get_closest_waypoint(stop_line)
                 distance = stop_line_wp - car_wp
